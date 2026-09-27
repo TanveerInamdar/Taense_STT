@@ -1,19 +1,23 @@
 // This file is main.rs without the print statements.
 
 use std::path::PathBuf;
-use std::time::Instant;
-
+// use std::time::Instant;
+use reqwest::StatusCode;
 use transcribe_rs::onnx::parakeet::{ParakeetModel, ParakeetParams, TimestampGranularity};
 use transcribe_rs::onnx::Quantization;
 
-fn get_audio_duration(path: &PathBuf) -> Result<f64, Box<dyn std::error::Error>> {
-    let reader = hound::WavReader::open(path)?;
-    let spec = reader.spec();
-    let duration = reader.duration() as f64 / spec.sample_rate as f64;
-    Ok(duration)
-}
+// fn get_audio_duration(path: &PathBuf) -> Result<f64, Box<dyn std::error::Error>> {
+//     let reader = hound::WavReader::open(path)?;
+//     let spec = reader.spec();
+//     let duration = reader.duration() as f64 / spec.sample_rate as f64;
+//     Ok(duration)
+// }
 
-fn STT() -> Result<(), Box<dyn std::error::Error>> {
+pub fn check_STTserver_status() -> bool { // Checks if the STT server is running
+    let response = reqwest::blocking::get("http://localhost:8081/health");
+    response.unwrap().status() == StatusCode::OK
+}
+pub fn STT() -> Result<String, Box<dyn std::error::Error>> {
 
     let model_path = PathBuf::from("models/parakeet-tdt-0.6b-v3-int8"); // This is the path to the model
 
@@ -29,7 +33,7 @@ fn STT() -> Result<(), Box<dyn std::error::Error>> {
             ..Default::default()
         },
     )?;
-    println!("{:#?}", result);
+    // println!("{:#?}", result);
     let STT_result = result.text;
-    Ok(())
+    Ok(STT_result)
 }

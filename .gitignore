@@ -1,0 +1,18 @@
+architecture.md
+AGENTS.md
+
+.idea/
+.vscode/
+.cursor/
+
+# Rust build artifacts for the STT core crate
+/STT_core/target/
+
+STT_core/models
+STT_core/target
+STT_core/Cargo.lock
+
+
+models/
+samples/
+

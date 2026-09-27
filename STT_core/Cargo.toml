@@ -1,0 +1,13 @@
+[package]
+name = "STT_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+transcribe-rs = { version = "0.3", features = ["onnx"] }
+
+reqwest = { version = "0.12", features = ["blocking", "json"] }
+tokio = { version = "1", features = ["full"] }
+#env_logger = "0.10.2"
+#hound = "3.5.1"
+serde = "1.0.229"
