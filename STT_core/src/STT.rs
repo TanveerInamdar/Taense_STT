@@ -13,9 +13,10 @@ use transcribe_rs::onnx::Quantization;
 //     Ok(duration)
 // }
 
-pub fn check_STTserver_status() -> bool { // Checks if the STT server is running
-    let response = reqwest::blocking::get("http://localhost:8081/health");
-    response.unwrap().status() == StatusCode::OK
+pub fn check_cleanup_server_status() -> Result<bool, reqwest::Error> { // Checks if the STT server is running
+    let response = reqwest::blocking::get("http://localhost:8081/health")?;
+    // response.unwrap().status() == StatusCode::OK
+    Ok(response.status().is_success())
 }
 pub fn STT() -> Result<String, Box<dyn std::error::Error>> {
 

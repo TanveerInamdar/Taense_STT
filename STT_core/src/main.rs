@@ -3,7 +3,7 @@ mod STT;
 use serde::{Serialize, Deserialize};
 use tokio::signal::windows::ctrl_break;
 // for struct formatting
-use STT::{STT, check_STTserver_status};
+use STT::{STT, check_cleanup_server_status};
 // {
 // "model": "your-model",
 // "messages": [
@@ -37,8 +37,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let res = STT()?; // The ? extracts the String. Without this, it would return Ok(String)
     // println!("{:?}", res);
-    if check_STTserver_status() == false{
-        return Err("The STT server aint runnin".into());
+    match check_cleanup_server_status() {
+        Ok(true) => {}
+        Ok(false) => {
+            eprintln!("Cleanup server responded, but is not healthy.");
+            return Ok(());
+        }
+        Err(e) => {
+            eprintln!("Cleanup server responded with error: {}", e);
+            return Ok(());
+        }
     }
     let client = reqwest::blocking::Client::new();
     let CleanupRequest = PostRequestBody{ // should be moved out later
@@ -58,7 +66,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .send();
 
     // println!("{:}", response.status());
-    println!("{:?}", response.unwrap().text());
+    println!("{:?}", response.unwrap().text().unwrap());
 
 
     // # async fn run() -> Result<(), Error> {
