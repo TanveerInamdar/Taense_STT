@@ -1,5 +1,6 @@
 architecture.md
 AGENTS.md
+run.md
 
 .idea/
 .vscode/
@@ -11,7 +12,7 @@ AGENTS.md
 STT_core/models
 STT_core/target
 STT_core/Cargo.lock
-
+STT_core/src/test.rs
 
 models/
 samples/
