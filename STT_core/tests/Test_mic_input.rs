@@ -7,7 +7,7 @@ mod tests {
     #[tokio:: test]
     async fn test_mic() {
         let res1test = get_mic_audio(2).await;
-        println!("{:?}", res1test);
+        println!("Test results : {:?}", res1test);
 
     }
 }
