@@ -1,10 +1,9 @@
+mod hotkey;
 mod STT;
 
 use serde::{Serialize, Deserialize};
 use serde_json::Value;
-use tokio::signal::windows::ctrl_break;
-// for struct formatting
-use STT::{STT, check_cleanup_server_status, get_mic_audio};
+use STT::{STT, check_cleanup_server_status, record_push_to_talk};
 // {
 // "model": "your-model",
 // "messages": [
@@ -47,7 +46,8 @@ fn response_parser(payload: &str){
 
 #[tokio::main] // allows async main functions
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let get_audio = get_mic_audio(5).await?;
+    let get_audio = record_push_to_talk().await?;
+    println!("Recording ended ({} samples @ 16 kHz mono)", get_audio.len());
     let res = STT(get_audio)?; // The ? extracts the String. Without this, it would return Ok(String)
 
     match check_cleanup_server_status().await { // no await? here because that would unwrap the result and wont work for match statements
